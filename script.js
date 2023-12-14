@@ -94,6 +94,7 @@ const addTask = () => {
 
     // });
   });
+  showDescription()
 }
 
 // =============== creation js chart ===============
@@ -147,6 +148,18 @@ const a = JSON.parse(aStr)
 console.log(a);
 
 
+const showDescription = () => {
+  const trRows = document.querySelectorAll('.ligne');
+  for (let i = 0; i < trRows.length; i++) {
+    const trRow = trRows[i];
+    trRow.addEventListener('click', () => {
+      const rowId = +trRow.children[0].textContent;
+      const clickedRowData = tableau.find(el => el.id ==rowId)
+      console.log(clickedRowData);
+      descriptSet.textContent = clickedRowData.description
+    })
+  }
+}
 
 // ================ Recuperation de l'index ==================
 // var table = document.querySelector(".table").querySelector('.tableBody');
