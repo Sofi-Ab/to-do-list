@@ -71,28 +71,20 @@ const addTask = () => {
 
   console.log(tableau);
   tableBody.innerHTML = ''
-  tableau.forEach((element) => {
+  tableau.forEach((element, y) => {
     tableBody.innerHTML += `
     <tr class='ligne'>
-		<td>${element.id}</td>
-		<td>${element.date}</td>
-		<td>${element.titre}</td>
-		<td>${element.catego}</td>
-		<td>
-			<box-icon name='trash' onclick = 'deleteTask()' id='trash' class='bg-danger' type='button'></box-icon> 
-			<box-icon name='show' id='show' class='bg-secondary'></box-icon>
-			<box-icon name='pencil' id='pencil' class='bg-primary' ></box-icon>
-		</td>
+      <td>${y+1}</td>
+      <td>${element.date}</td>
+      <td>${element.titre}</td>
+      <td>${element.catego}</td>
+      <td>
+        <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(this)' id='trash' class='bg-danger' type='button'></box-icon> 
+        <box-icon name='show' id='show' class='bg-secondary'></box-icon>
+        <box-icon name='pencil' id='pencil' class='bg-primary' ></box-icon>
+      </td>
     </tr>
     `
-    
-
-    // founction pour faire afficher la description dans le contenaire description
-    // tableBody.addEventListener('click', () => {
-    // descriptSet.innerHTML = object.description;
-    // object.description = descriptInput.value
-
-    // });
   });
   showDescription()
 }
@@ -134,32 +126,39 @@ function createChart() {
 }
 
 // =============== Configuration crud ===============
-// fonction delete
-function deleteTask() {
+// ===============delete=======================
 
+
+const deleteTask = (event) => {
+  
+let taskIndex = +event.parentElement.parentElement.children[0].textContent
+console.log(taskIndex);
+descriptSet.textContent = ""
+tableau = tableau.filter((el, sofi) => sofi != taskIndex-1)
+addTask();
 }
 
 // ===============localstorage=======================
 // Création d'un tableau
 let tableauLocal = localStorage.setItem('tableauLocal', JSON.stringify(tableau));
 const aStr = localStorage.getItem('tableauLocal');
-console.log(aStr);
 const a = JSON.parse(aStr)
-console.log(a);
 
 
+// Ajouter la description
 const showDescription = () => {
   const trRows = document.querySelectorAll('.ligne');
   for (let i = 0; i < trRows.length; i++) {
-    const trRow = trRows[i];
+    let trRow = trRows[i];
     trRow.addEventListener('click', () => {
       const rowId = +trRow.children[0].textContent;
-      const clickedRowData = tableau.find(el => el.id ==rowId)
+      const clickedRowData = tableau.find((el, sofi) => sofi ==rowId - 1)
       console.log(clickedRowData);
       descriptSet.textContent = clickedRowData.description
     })
   }
 }
+
 
 // ================ Recuperation de l'index ==================
 // var table = document.querySelector(".table").querySelector('.tableBody');
