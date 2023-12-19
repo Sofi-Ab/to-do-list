@@ -80,8 +80,8 @@ const addTask = () => {
       <td>${element.catego}</td>
       <td>
         <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(this)' id='trash' class='bg-danger' type='button'></box-icon> 
-        <box-icon name='show' id='show' class='bg-secondary'></box-icon>
-        <box-icon name='pencil' id='pencil' class='bg-primary' ></box-icon>
+        <box-icon name='show' id='show'  onclick = 'event.stopPropagation(); displayTask(this)'  class='bg-secondary'></box-icon>
+        <box-icon name='pencil' id='pencil'  onclick = 'event.stopPropagation();' class='bg-primary' ></box-icon>
       </td>
     </tr>
     `
@@ -125,9 +125,8 @@ function createChart() {
 
 }
 
-// =============== Configuration crud ===============
-// ===============delete=======================
-
+// =============== Configuration crud ===============================
+// =====================delete========================================
 
 const deleteTask = (event) => {
   
@@ -137,6 +136,56 @@ descriptSet.textContent = ""
 tableau = tableau.filter((el, sofi) => sofi != taskIndex-1)
 addTask();
 }
+
+// ===============affichage des taches=============================
+
+
+
+const displayTask = (event, show) => {
+ 
+ 
+  tableau.forEach(element => {
+    let eyeIcone = document.getElementById('show')
+    eyeIcone.innerHTML =`<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Information Tâche</h5>
+          </div>
+          <div class="modal-body">
+              <table class="table table-borderless">
+                  <thead>
+                      <tr>
+                          <th>Colonne 1</th>
+                          <th>Colonne ${element.date}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>Donnée 1-1</td>
+                          <td>Donnée ${element.titre}</td>
+                      </tr>
+                      <tr>
+                          <td>Donnée 2-1</td>
+                          <td>Donnée ${element.catego}</td>
+                      </tr>
+                      <!-- Ajoutez d'autres lignes selon vos besoins -->
+                  </tbody>
+              </table>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              <button type="button" class="btn btn-primary">Enregistrer</button>
+          </div>
+      </div>
+  </div>
+</div>
+  `
+  });
+  
+ }
+console.log(displayTask);
+
 
 // ===============localstorage=======================
 // Création d'un tableau
