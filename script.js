@@ -8,7 +8,8 @@ let descriptInput = document.getElementById('exampleFormControlTextarea1');
 let statutInput = document.querySelector('.input4')
 let submitBtn = document.querySelector('.btn');
 let statut = document.getElementById('statut');
-let descriptSet = document.getElementById('decript_set')
+let descriptSet = document.getElementById('decript_set');
+let tableau_info = document.querySelector('#info_modal');
 
 // initialisation des valeurs du statut
 let id = 0
@@ -33,7 +34,7 @@ let object = {
 // =============== soumettre le formulaire d'ajout de tache ===============
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  
+
   object.id = id++
   object.catego = inputElement1.value
   object.date = inputElement3.value
@@ -60,10 +61,10 @@ submitBtn.addEventListener('click', (e) => {
   else if (object.statut === 'fini') {
     debut++
   }
-  tableau.push({...object})
+  tableau.push({ ...object })
   addTask();
   createChart();
-  
+
 })
 
 // =============== creation tr tache ===============
@@ -74,7 +75,7 @@ const addTask = () => {
   tableau.forEach((element, y) => {
     tableBody.innerHTML += `
     <tr class='ligne'>
-      <td>${y+1}</td>
+      <td>${y + 1}</td>
       <td>${element.date}</td>
       <td>${element.titre}</td>
       <td>${element.catego}</td>
@@ -129,62 +130,71 @@ function createChart() {
 // =====================delete========================================
 
 const deleteTask = (event) => {
-  
-let taskIndex = +event.parentElement.parentElement.children[0].textContent
-console.log(taskIndex);
-descriptSet.textContent = ""
-tableau = tableau.filter((el, sofi) => sofi != taskIndex-1)
-addTask();
+
+  let taskIndex = +event.parentElement.parentElement.children[0].textContent
+  console.log(taskIndex);
+  descriptSet.textContent = ""
+  tableau = tableau.filter((el, sofi) => sofi != taskIndex - 1)
+  addTask();
 }
 
 // ===============affichage des taches=============================
 
 
 
-const displayTask = (event, show) => {
- 
- 
+const displayTask = (event,) => {
+  let tableau_info = document.querySelector('#info_modal');
+  console.log(tableau_info);
+
   tableau.forEach(element => {
-    let eyeIcone = document.getElementById('show')
-    eyeIcone.innerHTML =`<div class="modal" tabindex="-1">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title">Information Tâche</h5>
-          </div>
-          <div class="modal-body">
-              <table class="table table-borderless">
-                  <thead>
-                      <tr>
-                          <th>Colonne 1</th>
-                          <th>Colonne ${element.date}</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>Donnée 1-1</td>
-                          <td>Donnée ${element.titre}</td>
-                      </tr>
-                      <tr>
-                          <td>Donnée 2-1</td>
-                          <td>Donnée ${element.catego}</td>
-                      </tr>
-                      <!-- Ajoutez d'autres lignes selon vos besoins -->
-                  </tbody>
-              </table>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-              <button type="button" class="btn btn-primary">Enregistrer</button>
-          </div>
-      </div>
-  </div>
-</div>
+    // tableau.innerHTML = ''
+    console.log(tableau);
+    tableau_info.innerHTML =
+      `
+    <table class="table-info-td d-flex justify-content-center border border-2 di" >
+        <h4 class="bg-primary d-flex justify-content-center">Information tache</h4>
+        <!-- date -->
+        <tr>
+            <td>Date :</td>
+            <td>${element.date}</td>
+        </tr>
+        <!-- Titre -->
+        <tr>
+            <td>Titre:</td>
+            <td>${element.titre}</td>
+        </tr>
+         <!-- categorie -->
+        <tr>
+            <td>Categorie :</td>
+            <td>${element.catego}</td>
+        </tr>
+         <!-- description -->
+        <tr>
+            <td>Description :</td>
+            <td>${element.description}</td>
+        </tr>
+         <!-- satat -->
+        <tr>
+            <td>Statut :</td>
+            <td>${element.statut}</td>
+        </tr>
+       
+    </table>
   `
+    tableau_info.style.display = 'block';
+
   });
-  
- }
-console.log(displayTask);
+
+}
+// =============== fonction pour faire disparaitre le modal d'information ===============
+document.addEventListener('mouseup', function(e) {
+  let tableau_info = document.querySelector('#info_modal');
+  let container = document.querySelector('.container-md');
+  if (container.contains(e.target)) {
+    tableau_info.style.display = 'none';
+  }
+});
+
 
 
 // ===============localstorage=======================
@@ -201,7 +211,7 @@ const showDescription = () => {
     let trRow = trRows[i];
     trRow.addEventListener('click', () => {
       const rowId = +trRow.children[0].textContent;
-      const clickedRowData = tableau.find((el, sofi) => sofi ==rowId - 1)
+      const clickedRowData = tableau.find((el, sofi) => sofi == rowId - 1)
       console.log(clickedRowData);
       descriptSet.textContent = clickedRowData.description
     })

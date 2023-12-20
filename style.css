@@ -3,10 +3,8 @@
     width: 100%;
     height: 30px;
 }
-
-#boutton{
-    width: 100%!important;
-}
-.info_modal{
-    background-color: rgb(116, 167, 171);
+#info_modal{
+    height: 10rem;
+    width: 30rem;
+    display: none;
 }
