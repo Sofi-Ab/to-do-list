@@ -5,8 +5,9 @@ let inputElement2 = document.querySelector('.input2');
 let inputElement3 = document.querySelector('.input3');
 let tableBody = document.querySelector('.tableBody');
 let descriptInput = document.getElementById('exampleFormControlTextarea1');
-let statutInput = document.querySelector('.input4')
-let submitBtn = document.querySelector('.btn');
+let statutInput = document.querySelector('.input4');
+let OptionValueSelect = document.querySelector('.valueOptionSelect');
+let submitBtn = document.querySelector('.boutton_submit');
 let statut = document.getElementById('statut');
 let descriptSet = document.getElementById('decript_set');
 let tableau_info = document.querySelector('#info_modal');
@@ -82,7 +83,7 @@ const addTask = () => {
       <td>
         <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(this)' id='trash' class='bg-danger' type='button'></box-icon> 
         <box-icon name='show' id='show'  onclick = 'event.stopPropagation(); displayTask(this)'  class='bg-secondary'></box-icon>
-        <box-icon name='pencil' id='pencil'  onclick = 'event.stopPropagation() ' class='bg-primary' ></box-icon>
+        <box-icon name='pencil' id='edit'  onclick = 'event.stopPropagation(); editTask(this)'  class='bg-primary' ></box-icon>
       </td>
     </tr>
     `
@@ -140,6 +141,8 @@ const deleteTask = (event) => {
 
 // ===============affichage des taches=============================
 
+
+
 const displayTask = (event,) => {
   let tableau_info = document.querySelector('#info_modal');
   console.log(tableau_info);
@@ -186,14 +189,28 @@ const displayTask = (event,) => {
 }
 
 
+// =============== fonction pour modifier une tache ajoutée ===============
+const editTask = (event,) => {
+  submitBtn.style.display = 'none';
+  tableau.forEach(element => {
+    inputElement1.value = element.catego;
+    inputElement2.value = element.titre;
+    inputElement3.value = element.date;
+    descriptInput.value = element.description;
+    setSelectedOption(element.statut);
+  });
+  document.getElementById('blocBtn').innerHTML = `<button type="button" class="boutton_edit btn btn-primary mt-3 w-75">Modifier</button>`;
+}
+
 // =============== fonction pour faire disparaitre le modal d'information ===============
-document.addEventListener('mouseup', function(e) {
+document.addEventListener('mouseup', function (e) {
   let tableau_info = document.querySelector('#info_modal');
   let container = document.querySelector('.container-md');
   if (container.contains(e.target)) {
     tableau_info.style.display = 'none';
   }
 });
+
 
 
 // ===============localstorage=======================
@@ -218,12 +235,18 @@ const showDescription = () => {
 }
 
 
-// ===============  fonction de modification du formulaire  ==============
-const edit_formullaire = (event, ) => {
-  
-
+// Fonction pour définir l'option sélectionnée en fonction de la valeur
+function setSelectedOption(value) {
+  var selectElement = document.getElementById('statut');
+  for (var i = 0; i < selectElement.options.length; i++) {
+    var option = selectElement.options[i];
+    if (option.value === value) {
+      option.selected = true;
+    } else {
+      option.selected = false;
+    }
+  }
 }
-
 
 // ================ Recuperation de l'index ==================
 // var table = document.querySelector(".table").querySelector('.tableBody');
@@ -242,3 +265,5 @@ const edit_formullaire = (event, ) => {
 //   });
 // }
 // ================ Recuperation de l'index ==================
+
+
