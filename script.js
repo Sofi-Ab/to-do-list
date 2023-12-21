@@ -8,9 +8,11 @@ let descriptInput = document.getElementById('exampleFormControlTextarea1');
 let statutInput = document.querySelector('.input4');
 let OptionValueSelect = document.querySelector('.valueOptionSelect');
 let submitBtn = document.querySelector('.boutton_submit');
+const btnEdit = document.querySelector('#boutton_edit');
 let statut = document.getElementById('statut');
 let descriptSet = document.getElementById('decript_set');
 let tableau_info = document.querySelector('#info_modal');
+
 
 // initialisation des valeurs du statut
 let id = 0
@@ -37,6 +39,8 @@ submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
   object.id = id++
+  console.log(object);
+  
   object.catego = inputElement1.value
   object.date = inputElement3.value
   object.description = descriptInput.value
@@ -71,7 +75,7 @@ submitBtn.addEventListener('click', (e) => {
 // =============== creation tr tache ===============
 const addTask = () => {
 
-  console.log(tableau);
+  // console.log(tableau);
   tableBody.innerHTML = ''
   tableau.forEach((element, y) => {
     tableBody.innerHTML += `
@@ -83,11 +87,12 @@ const addTask = () => {
       <td>
         <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(this)' id='trash' class='bg-danger' type='button'></box-icon> 
         <box-icon name='show' id='show'  onclick = 'event.stopPropagation(); displayTask(this)'  class='bg-secondary'></box-icon>
-        <box-icon name='pencil' id='edit'  onclick = 'event.stopPropagation(); editTask(this)'  class='bg-primary' ></box-icon>
+        <box-icon name='pencil' id='edit'  onclick = 'event.stopPropagation(); editTask(this) '  class='bg-primary' ></box-icon>
       </td>
     </tr>
     `
   });
+ 
   showDescription()
 }
 
@@ -136,7 +141,7 @@ const deleteTask = (event) => {
   console.log(taskIndex);
   descriptSet.textContent = ""
   tableau = tableau.filter((el, sofi) => sofi != taskIndex - 1)
-  addTask();
+  
 }
 
 // ===============affichage des taches=============================
@@ -148,7 +153,7 @@ const displayTask = (event,) => {
   console.log(tableau_info);
 
   tableau.forEach(element => {
-    // tableau.innerHTML = ''
+    tableau.innerHTML = ''
     console.log(tableau);
     tableau_info.innerHTML =
       `
@@ -199,8 +204,25 @@ const editTask = (event,) => {
     descriptInput.value = element.description;
     setSelectedOption(element.statut);
   });
-  document.getElementById('blocBtn').innerHTML = `<button type="button" class="boutton_edit btn btn-primary mt-3 w-75">Modifier</button>`;
+  submitBtn.style.display = 'none';
+  btnEdit.style.display = 'block';
 }
+btnEdit.style.display = 'none';
+
+
+
+// =============== fonction pour soumettre le formulaire ===============
+ btnEdit.addEventListener('click', function() {
+
+ })
+
+function update() {
+
+
+}
+
+
+ 
 
 // =============== fonction pour faire disparaitre le modal d'information ===============
 document.addEventListener('mouseup', function (e) {
@@ -228,7 +250,6 @@ const showDescription = () => {
     trRow.addEventListener('click', () => {
       const rowId = +trRow.children[0].textContent;
       const clickedRowData = tableau.find((el, sofi) => sofi == rowId - 1)
-      console.log(clickedRowData);
       descriptSet.textContent = clickedRowData.description
     })
   }
@@ -247,6 +268,7 @@ function setSelectedOption(value) {
     }
   }
 }
+
 
 // ================ Recuperation de l'index ==================
 // var table = document.querySelector(".table").querySelector('.tableBody');
