@@ -82,7 +82,7 @@ const addTask = () => {
       <td>
         <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(this)' id='trash' class='bg-danger' type='button'></box-icon> 
         <box-icon name='show' id='show'  onclick = 'event.stopPropagation(); displayTask(this)'  class='bg-secondary'></box-icon>
-        <box-icon name='pencil' id='pencil'  onclick = 'event.stopPropagation();' class='bg-primary' ></box-icon>
+        <box-icon name='pencil' id='pencil'  onclick = 'event.stopPropagation() ' class='bg-primary' ></box-icon>
       </td>
     </tr>
     `
@@ -140,8 +140,6 @@ const deleteTask = (event) => {
 
 // ===============affichage des taches=============================
 
-
-
 const displayTask = (event,) => {
   let tableau_info = document.querySelector('#info_modal');
   console.log(tableau_info);
@@ -186,6 +184,8 @@ const displayTask = (event,) => {
   });
 
 }
+
+
 // =============== fonction pour faire disparaitre le modal d'information ===============
 document.addEventListener('mouseup', function(e) {
   let tableau_info = document.querySelector('#info_modal');
@@ -194,7 +194,6 @@ document.addEventListener('mouseup', function(e) {
     tableau_info.style.display = 'none';
   }
 });
-
 
 
 // ===============localstorage=======================
@@ -216,6 +215,13 @@ const showDescription = () => {
       descriptSet.textContent = clickedRowData.description
     })
   }
+}
+
+
+// ===============  fonction de modification du formulaire  ==============
+const edit_formullaire = (event, ) => {
+  
+
 }
 
 
