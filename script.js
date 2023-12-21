@@ -15,7 +15,7 @@ let tableau_info = document.querySelector('#info_modal');
 
 
 // initialisation des valeurs du statut
-let id = 0
+let id = 0;
 let terminer = 0
 let debut = 0
 let moyen = 0
@@ -39,8 +39,6 @@ submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
   object.id = id++
-  console.log(object);
-  
   object.catego = inputElement1.value
   object.date = inputElement3.value
   object.description = descriptInput.value
@@ -85,14 +83,14 @@ const addTask = () => {
       <td>${element.titre}</td>
       <td>${element.catego}</td>
       <td>
-        <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(this)' id='trash' class='bg-danger' type='button'></box-icon> 
+        <box-icon name='trash' onclick = 'event.stopPropagation(); deleteTask(${element.id})' id='trash' class='bg-danger' type='button'></box-icon> 
         <box-icon name='show' id='show'  onclick = 'event.stopPropagation(); displayTask(this)'  class='bg-secondary'></box-icon>
-        <box-icon name='pencil' id='edit'  onclick = 'event.stopPropagation(); editTask(this) '  class='bg-primary' ></box-icon>
+        <box-icon name='pencil' id='edit'  onclick = 'event.stopPropagation(); editTask(${element.id}) '  class='bg-primary' ></box-icon>
       </td>
     </tr>
     `
   });
- 
+
   showDescription()
 }
 
@@ -136,12 +134,8 @@ function createChart() {
 // =====================delete========================================
 
 const deleteTask = (event) => {
-
-  let taskIndex = +event.parentElement.parentElement.children[0].textContent
-  console.log(taskIndex);
-  descriptSet.textContent = ""
-  tableau = tableau.filter((el, sofi) => sofi != taskIndex - 1)
-  
+  supprimerElementParId(event);
+  addTask();
 }
 
 // ===============affichage des taches=============================
@@ -196,6 +190,8 @@ const displayTask = (event,) => {
 
 // =============== fonction pour modifier une tache ajoutée ===============
 const editTask = (event,) => {
+  let taskIndex = event;
+  console.log(taskIndex);
   submitBtn.style.display = 'none';
   tableau.forEach(element => {
     inputElement1.value = element.catego;
@@ -206,23 +202,41 @@ const editTask = (event,) => {
   });
   submitBtn.style.display = 'none';
   btnEdit.style.display = 'block';
+
+
+  // =============== fonction pour soumettre le formulaire ===============
+  btnEdit.addEventListener('click', function () {
+    let nouvellesDonnees = { catego: inputElement1.value, date: inputElement3.value, description: descriptInput.value, titre: inputElement2.value, statut: statut.value };
+    mettreAJourDonneesParId(taskIndex, nouvellesDonnees);
+    addTask()
+  });
 }
 btnEdit.style.display = 'none';
 
 
 
-// =============== fonction pour soumettre le formulaire ===============
- btnEdit.addEventListener('click', function() {
+// Fonction pour mettre à jour les données en fonction de l'id
+function mettreAJourDonneesParId(idRecherche, nouvellesDonnees) {
+  // Étape 1 : Trouver l'index de l'élément avec l'id spécifique
+  const indexElement = tableau.findIndex(element => element.id === idRecherche);
 
- })
+  // Étape 2 : Mettre à jour les données de cet élément
+  if (indexElement !== -1) {
+    tableau[indexElement] = { ...tableau[indexElement], ...nouvellesDonnees };
+    // Utilisation de l'opérateur de propagation (...) pour fusionner les anciennes et nouvelles données
+    // Vous pouvez également mettre à jour spécifiquement les propriétés nécessaires selon vos besoins.
+  } else {
+    console.log("Aucun élément trouvé avec l'id spécifié.");
+  }
+}
 
-function update() {
-
-
+// Fonction pour supprimer un élément en fonction de l'id
+function supprimerElementParId(idASupprimer) {
+  // Utilisez la méthode filter pour créer un nouveau tableau sans l'élément à supprimer
+  tableau = tableau.filter(element => element.id !== idASupprimer);
 }
 
 
- 
 
 // =============== fonction pour faire disparaitre le modal d'information ===============
 document.addEventListener('mouseup', function (e) {
