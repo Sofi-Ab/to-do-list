@@ -206,10 +206,20 @@ const editTask = (event,) => {
 
   // =============== fonction pour soumettre le formulaire ===============
   btnEdit.addEventListener('click', function () {
+
     let nouvellesDonnees = { catego: inputElement1.value, date: inputElement3.value, description: descriptInput.value, titre: inputElement2.value, statut: statut.value };
     mettreAJourDonneesParId(taskIndex, nouvellesDonnees);
     addTask()
+    inputElement1.value = ''
+    inputElement2.value = ''
+    inputElement3.value = ''
+    descriptInput.value = ''
+
+    submitBtn.style.display = 'block';
+    btnEdit.style.display = 'none';
+    
   });
+ 
 }
 btnEdit.style.display = 'none';
 
