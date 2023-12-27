@@ -13,7 +13,6 @@ let statut = document.getElementById('statut');
 let descriptSet = document.getElementById('decript_set');
 let tableau_info = document.querySelector('#info_modal');
 
-
 // initialisation des valeurs du statut
 let id = 0;
 let terminer = 0
@@ -30,9 +29,6 @@ let object = {
   statut: '',
   titre: ''
 }
-
-// mettre les objets dans le tableau
-// tableau.push(object)
 
 // =============== soumettre le formulaire d'ajout de tache ===============
 submitBtn.addEventListener('click', (e) => {
@@ -58,21 +54,39 @@ submitBtn.addEventListener('click', (e) => {
   } else if (object.statut === 'en-cours') {
     moyen++
   }
-  else if (object.statut === 'en-cours') {
-    moyen++
-  }
-  else if (object.statut === 'fini') {
+  else if (object.statut === 'nouveau') {
     debut++
   }
   tableau.push({ ...object })
+
+  // ===============Ajouter mon tableau d'objet dans le localstorage=======================
+  localStorage.setItem('table', JSON.stringify(tableau))
+
   addTask();
   createChart();
-
 })
+
+// ===============Recuperer les elements du localstorage=======================
+let geTtableau = JSON.parse(localStorage.getItem('table'))
+
+
+
+
+// Ajouter la description
+const showDescription = () => {
+  const trRows = document.querySelectorAll('.ligne');
+  for (let i = 0; i < trRows.length; i++) {
+    let trRow = trRows[i];
+    trRow.addEventListener('click', () => {
+      const rowId = +trRow.children[0].textContent;
+      const clickedRowData = tableau.find((el, sofi) => sofi == rowId - 1)
+      descriptSet.textContent = clickedRowData.description
+    })
+  }
+}
 
 // =============== creation tr tache ===============
 const addTask = () => {
-
   // console.log(tableau);
   tableBody.innerHTML = ''
   tableau.forEach((element, y) => {
@@ -90,15 +104,22 @@ const addTask = () => {
     </tr>
     `
   });
-
+  
   showDescription()
+}
+
+//condition pour verifier les si le geTtableau exite dans le localstorage 
+// si oui tableau recoit geTtableau
+if (geTtableau) {
+  tableau = geTtableau
+  addTask();
 }
 
 // =============== creation js chart ===============
 const ctx = document.getElementById('myChart');
 let myNewChart;
 
-// =============== function ppour mettre à jour la charte ===============
+// =============== function pour mettre à jour la charte ===============
 function createChart() {
   if (myNewChart) {
     myNewChart.destroy();
@@ -110,7 +131,7 @@ function createChart() {
         label: 'taches',
         data: [debut, moyen, terminer],
         backgroundColor: ["red", "blue", "black"],
-        borderWidth: 2
+        borderWidth: 2  
       }]
     },
     options: {
@@ -124,24 +145,26 @@ function createChart() {
 
       }
     }
+    
   });
+  const chartData = JSON.stringify(myNewChart);
+  localStorage.setItem('chartData', chartData);
 
   myNewChart.update();
 
 }
 
-// =============== Configuration crud ===============================
-// =====================delete========================================
+// ===============recuperer  ma charte du localstorage=======================
 
+
+// =============== Configuration crud ===============================
+// =====================delete task========================================
 const deleteTask = (event) => {
   supprimerElementParId(event);
   addTask();
 }
 
 // ===============affichage des taches=============================
-
-
-
 const displayTask = (event,) => {
   let tableau_info = document.querySelector('#info_modal');
   console.log(tableau_info);
@@ -173,7 +196,7 @@ const displayTask = (event,) => {
             <td>Description :</td>
             <td>${element.description}</td>
         </tr>
-         <!-- satat -->
+         <!-- statut -->
         <tr>
             <td>Statut :</td>
             <td>${element.statut}</td>
@@ -182,11 +205,8 @@ const displayTask = (event,) => {
     </table>
   `
     tableau_info.style.display = 'block';
-
   });
-
 }
-
 
 // =============== fonction pour modifier une tache ajoutée ===============
 const editTask = (event,) => {
@@ -199,10 +219,10 @@ const editTask = (event,) => {
     inputElement3.value = element.date;
     descriptInput.value = element.description;
     setSelectedOption(element.statut);
+    createChart();
   });
   submitBtn.style.display = 'none';
   btnEdit.style.display = 'block';
-
 
   // =============== fonction pour soumettre le formulaire ===============
   btnEdit.addEventListener('click', function () {
@@ -214,16 +234,12 @@ const editTask = (event,) => {
     inputElement2.value = ''
     inputElement3.value = ''
     descriptInput.value = ''
-
+    createChart();
     submitBtn.style.display = 'block';
     btnEdit.style.display = 'none';
-    
   });
- 
 }
 btnEdit.style.display = 'none';
-
-
 
 // Fonction pour mettre à jour les données en fonction de l'id
 function mettreAJourDonneesParId(idRecherche, nouvellesDonnees) {
@@ -246,8 +262,6 @@ function supprimerElementParId(idASupprimer) {
   tableau = tableau.filter(element => element.id !== idASupprimer);
 }
 
-
-
 // =============== fonction pour faire disparaitre le modal d'information ===============
 document.addEventListener('mouseup', function (e) {
   let tableau_info = document.querySelector('#info_modal');
@@ -256,29 +270,6 @@ document.addEventListener('mouseup', function (e) {
     tableau_info.style.display = 'none';
   }
 });
-
-
-
-// ===============localstorage=======================
-// Création d'un tableau
-let tableauLocal = localStorage.setItem('tableauLocal', JSON.stringify(tableau));
-const aStr = localStorage.getItem('tableauLocal');
-const a = JSON.parse(aStr)
-
-
-// Ajouter la description
-const showDescription = () => {
-  const trRows = document.querySelectorAll('.ligne');
-  for (let i = 0; i < trRows.length; i++) {
-    let trRow = trRows[i];
-    trRow.addEventListener('click', () => {
-      const rowId = +trRow.children[0].textContent;
-      const clickedRowData = tableau.find((el, sofi) => sofi == rowId - 1)
-      descriptSet.textContent = clickedRowData.description
-    })
-  }
-}
-
 
 // Fonction pour définir l'option sélectionnée en fonction de la valeur
 function setSelectedOption(value) {
@@ -294,22 +285,14 @@ function setSelectedOption(value) {
 }
 
 
-// ================ Recuperation de l'index ==================
-// var table = document.querySelector(".table").querySelector('.tableBody');
-// console.log(table);
-// var rows = table.getElementsByTagName("tr");
-// console.log(rows);
-// // console.log(rows.length);
-// for (var i = 0; i < rows.length; i++) {
-//   rows[i].addEventListener("click", function () {
-//     // Récupérer l'index de la ligne cliquée
-//     console.log('heheheh');
-//     var index = this.rowIndex;
 
-//     // Afficher l'index dans la console (vous pouvez le manipuler comme vous le souhaitez)
-//     console.log("Index de la ligne cliquée : " + index);
-//   });
-// }
-// ================ Recuperation de l'index ==================
+/* const tab = [
+  {
+    id : 0,
+    nom : 'sofy'
+  }
+]
 
-
+localStorage.setItem('tab', JSON.stringify(tab))
+let getString =  JSON.parse(localStorage.getItem('tab'))
+console.log( getString); */
